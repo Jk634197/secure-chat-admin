@@ -8,28 +8,28 @@ function generateToken(): string {
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-const user = {
+const mockUser = {
   id: 'USR-000',
   avatar: '/assets/avatar.png',
-  firstName: 'Sofia',
-  lastName: 'Rivers',
-  email: 'sofia@devias.io',
+  firstName: 'Admin',
+  lastName: 'User',
+  email: 'admin@example.com',
 } satisfies User;
-
-export interface SignUpParams {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export interface SignInWithOAuthParams {
-  provider: 'google' | 'discord';
-}
 
 export interface SignInWithPasswordParams {
   email: string;
   password: string;
+}
+
+export interface SignUpParams {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+export interface SignInWithOAuthParams {
+  provider: 'google' | 'discord';
 }
 
 export interface ResetPasswordParams {
@@ -39,11 +39,9 @@ export interface ResetPasswordParams {
 class AuthClient {
   async signUp(_: SignUpParams): Promise<{ error?: string }> {
     // Make API request
-
     // We do not handle the API, so we'll just generate a token and store it in localStorage.
     const token = generateToken();
     localStorage.setItem('custom-auth-token', token);
-
     return {};
   }
 
@@ -51,19 +49,11 @@ class AuthClient {
     return { error: 'Social authentication not implemented' };
   }
 
-  async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
-    const { email, password } = params;
-
-    // Make API request
-
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
-    if (email !== 'sofia@devias.io' || password !== 'Secret1') {
-      return { error: 'Invalid credentials' };
-    }
-
+  async signInWithPassword(_params: SignInWithPasswordParams): Promise<{ error?: string }> {
+    // For demo purposes, accept any email/password
+    // In a real app, you would validate against your backend
     const token = generateToken();
     localStorage.setItem('custom-auth-token', token);
-
     return {};
   }
 
@@ -77,7 +67,6 @@ class AuthClient {
 
   async getUser(): Promise<{ data?: User | null; error?: string }> {
     // Make API request
-
     // We do not handle the API, so just check if we have a token in localStorage.
     const token = localStorage.getItem('custom-auth-token');
 
@@ -85,12 +74,11 @@ class AuthClient {
       return { data: null };
     }
 
-    return { data: user };
+    return { data: mockUser };
   }
 
   async signOut(): Promise<{ error?: string }> {
     localStorage.removeItem('custom-auth-token');
-
     return {};
   }
 }

@@ -13,21 +13,33 @@ type Color = 'dark' | 'light';
 
 export interface LogoProps {
   color?: Color;
-  emblem?: boolean;
+  _emblem?: boolean;
   height?: number;
   width?: number;
 }
 
-export function Logo({ color = 'dark', emblem, height = HEIGHT, width = WIDTH }: LogoProps): React.JSX.Element {
-  let url: string;
-
-  if (emblem) {
-    url = color === 'light' ? '/assets/logo-emblem.svg' : '/assets/logo-emblem--dark.svg';
-  } else {
-    url = color === 'light' ? '/assets/logo.svg' : '/assets/logo--dark.svg';
-  }
-
-  return <Box alt="logo" component="img" height={height} src={url} width={width} />;
+export function Logo({ color = 'dark', _emblem, height = HEIGHT, width = WIDTH }: LogoProps): React.JSX.Element {
+  // Text-based logo instead of image
+  return (
+    <Box
+      sx={{
+        height: `${height}px`,
+        width: `${width}px`,
+        bgcolor: color === 'dark' ? 'primary.main' : 'primary.light',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 1,
+      }}
+    >
+      <Box
+        component="span"
+        sx={{ color: color === 'dark' ? 'white' : 'primary.dark', fontWeight: 'bold', fontSize: '1.2rem' }}
+      >
+        ADMIN
+      </Box>
+    </Box>
+  );
 }
 
 export interface DynamicLogoProps {

@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react';
 import RouterLink from 'next/link';
 import Box from '@mui/material/Box';
@@ -23,7 +25,7 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
     >
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
         <Box sx={{ p: 3 }}>
-          <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-block', fontSize: 0 }}>
+          <Box component={RouterLink} href={paths.dashboard.users} sx={{ display: 'inline-block', fontSize: 0 }}>
             <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} />
           </Box>
         </Box>
@@ -46,20 +48,43 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
             <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
               Welcome to{' '}
               <Box component="span" sx={{ color: '#15b79e' }}>
-                Devias Kit
+                Admin Portal
               </Box>
             </Typography>
             <Typography align="center" variant="subtitle1">
-              A professional template that comes with ready-to-use MUI components.
+              Secure user management system
             </Typography>
           </Stack>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            {/* TODO: Replace with your custom branding image */}
+            {/* Current implementation uses Devias Kit branding */}
+            {/* 
             <Box
               component="img"
               alt="Widgets"
               src="/assets/auth-widgets.png"
               sx={{ height: 'auto', width: '100%', maxWidth: '600px' }}
             />
+            */}
+            {/* Placeholder for your branding image */}
+            <Box
+              sx={{
+                height: '300px',
+                width: '100%',
+                maxWidth: '600px',
+                bgcolor: 'background.paper',
+                borderRadius: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px dashed',
+                borderColor: 'divider',
+              }}
+            >
+              <Typography variant="body2" color="text.secondary">
+                Your branding image here
+              </Typography>
+            </Box>
           </Box>
         </Stack>
       </Box>
