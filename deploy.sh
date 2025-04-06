@@ -1,24 +1,21 @@
 #!/bin/bash
 
-# Update system packages
-sudo yum update -y
+# Pull latest changes from origin
+git pull origin main
 
-# Install Node.js and npm
-curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
-sudo yum install -y nodejs
+# Build the Docker image
+docker build -t secure-admin .
 
-# Install PM2 globally
-sudo npm install -g pm2
+# Stop and remove the existing container if it exists
+docker stop secure-admin || true
+docker rm secure-admin || true
 
-# Install application dependencies
-npm install
+# Run the new container
+docker run -d \
+  --name secure-admin \
+  -p 3001:3000 \
+  --restart unless-stopped \
+  secure-admin
 
-# Build the application
-npm run build
-
-# Start the application with PM2
-pm2 start ecosystem.config.js
-
-# Save PM2 process list and configure to start on system boot
-pm2 save
-pm2 startup 
+# Clean up unused images
+docker image prune -f 
