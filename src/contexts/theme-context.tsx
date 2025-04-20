@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { getStorageItem, setStorageItem } from '../utils/storage';
+
 interface ThemeContextType {
   isDarkMode: boolean;
   toggleTheme: () => void;
@@ -11,7 +13,7 @@ export const ThemeContext = React.createContext<ThemeContextType | undefined>(un
 
 export function ThemeProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
   const [isDarkMode, setIsDarkMode] = React.useState<boolean>(() => {
-    const savedTheme = localStorage.getItem('theme');
+    const savedTheme = getStorageItem('theme');
     return savedTheme === 'dark';
   });
 
@@ -21,14 +23,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }): Reac
 
   React.useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+    setStorageItem('theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme(): ThemeContextType {

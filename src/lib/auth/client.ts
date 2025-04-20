@@ -2,6 +2,7 @@
 
 import { authService } from '@/services/auth';
 import type { User } from '@/types/user';
+import { removeStorageItem } from '../../utils/storage';
 
 export interface SignInWithPasswordParams {
   email: string;
@@ -59,7 +60,7 @@ class AuthClient {
   }
 
   async signOut(): Promise<{ error?: string }> {
-    localStorage.removeItem('custom-auth-token');
+    removeStorageItem('custom-auth-token');
     authService.logout();
     return {};
   }

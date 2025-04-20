@@ -1,3 +1,4 @@
+import { getStorageItem, setStorageItem, removeStorageItem } from '../utils/storage';
 
 interface LoginResponse {
     success: boolean;
@@ -18,8 +19,8 @@ class AuthService {
     private token: string | null = null;
 
     constructor() {
-        // Initialize token from localStorage if exists
-        this.token = localStorage.getItem('auth-token');
+        // Initialize token from storage if exists
+        this.token = getStorageItem('auth-token');
     }
 
     private getHeaders(): HeadersInit {
@@ -50,9 +51,9 @@ class AuthService {
             const { data, success } = LoginApiResponse;
             if (success && data?.token && data.role === 'superadmin') {
                 this.token = data.token;
-                localStorage.setItem('auth-token', data.token);
-                localStorage.setItem('user-role', data.role);
-                localStorage.setItem('user-data', JSON.stringify(data));
+                setStorageItem('auth-token', data.token);
+                setStorageItem('user-role', data.role);
+                setStorageItem('user-data', JSON.stringify(data));
                 return { success: true, user: data };
             }
 
@@ -67,18 +68,18 @@ class AuthService {
     }
 
     isAuthenticated(): boolean {
-        return Boolean(this.token) && localStorage.getItem('user-role') === 'superadmin';
+        return Boolean(this.token) && getStorageItem('user-role') === 'superadmin';
     }
 
     logout(): void {
         this.token = null;
-        localStorage.removeItem('auth-token');
-        localStorage.removeItem('user-role');
-        localStorage.removeItem('user-data');
+        removeStorageItem('auth-token');
+        removeStorageItem('user-role');
+        removeStorageItem('user-data');
     }
 
     getUser(): LoginResponse['data'] | null {
-        const userData = localStorage.getItem('user-data');
+        const userData = getStorageItem('user-data');
         if (!userData) return null;
         try {
             return JSON.parse(userData) as LoginResponse['data'];

@@ -1,3 +1,5 @@
+import { getStorageItem, removeStorageItem } from './storage';
+
 export interface ApiResponse<T> {
     success: boolean;
     statusCode: number;
@@ -10,7 +12,7 @@ export async function fetchWithAuth<T>(
     options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
     // Get token from localStorage or your auth storage
-    const token = localStorage.getItem('auth-token');
+    const token = getStorageItem('auth-token');
 
     const headers = {
         'Content-Type': 'application/json',
@@ -27,9 +29,9 @@ export async function fetchWithAuth<T>(
         // Handle 401 Unauthorized
         if (response.status === 401 || response.status === 403) {
             // Use same logout cleanup as auth.logout()
-            localStorage.removeItem('auth-token');
-            localStorage.removeItem('user-role');
-            localStorage.removeItem('user-data');
+            removeStorageItem('auth-token');
+            removeStorageItem('user-role');
+            removeStorageItem('user-data');
             window.location.href = '/';
             throw new Error('Session expired. Please login again.');
         }
