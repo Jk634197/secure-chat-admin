@@ -26,7 +26,7 @@ export function Logo({ color = 'dark', _emblem, height = HEIGHT, width = WIDTH }
         height: `${height}px`,
         width: `${width}px`,
         bgcolor: color === 'dark' ? 'primary.main' : 'primary.light',
-        display: 'flex',
+        display: 'none',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 1,

@@ -44,7 +44,7 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
     }
   }, [checkSession, router]);
 
-  const fullName = user ? `${user.firstName as string} ${user.lastName as string}` : '';
+  const fullName = user ? user?.username : '';
   const email = user?.email || '';
 
   return (

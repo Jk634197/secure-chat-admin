@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from '@/paths';
 import { DynamicLogo } from '@/components/core/logo';
+import { ThemeProvider } from '../core/theme-provider/theme-provider';
 
 export interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export interface LayoutProps {
 
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
+    <ThemeProvider>
     <Box
       sx={{
         display: { xs: 'flex', lg: 'grid' },
@@ -89,5 +91,6 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         </Stack>
       </Box>
     </Box>
+    </ThemeProvider>
   );
 }

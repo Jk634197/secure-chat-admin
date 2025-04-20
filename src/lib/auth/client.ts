@@ -1,20 +1,7 @@
 'use client';
 
+import { authService } from '@/services/auth';
 import type { User } from '@/types/user';
-
-function generateToken(): string {
-  const arr = new Uint8Array(12);
-  window.crypto.getRandomValues(arr);
-  return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
-}
-
-const mockUser = {
-  id: 'USR-000',
-  avatar: '/assets/avatar.png',
-  firstName: 'Admin',
-  lastName: 'User',
-  email: 'admin@example.com',
-} satisfies User;
 
 export interface SignInWithPasswordParams {
   email: string;
@@ -38,22 +25,20 @@ export interface ResetPasswordParams {
 
 class AuthClient {
   async signUp(_: SignUpParams): Promise<{ error?: string }> {
-    // Make API request
-    // We do not handle the API, so we'll just generate a token and store it in localStorage.
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
-    return {};
+    return { error: 'Sign up not implemented' };
   }
 
   async signInWithOAuth(_: SignInWithOAuthParams): Promise<{ error?: string }> {
     return { error: 'Social authentication not implemented' };
   }
 
-  async signInWithPassword(_params: SignInWithPasswordParams): Promise<{ error?: string }> {
-    // For demo purposes, accept any email/password
-    // In a real app, you would validate against your backend
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
+  async signInWithPassword(params: SignInWithPasswordParams): Promise<{ error?: string }> {
+    const result = await authService.login(params.email, params.password);
+
+    if (!result.success) {
+      return { error: result.error };
+    }
+
     return {};
   }
 
@@ -66,19 +51,16 @@ class AuthClient {
   }
 
   async getUser(): Promise<{ data?: User | null; error?: string }> {
-    // Make API request
-    // We do not handle the API, so just check if we have a token in localStorage.
-    const token = localStorage.getItem('custom-auth-token');
-
-    if (!token) {
+    const user: User | null = authService.getUser();
+    if (!user || !authService.isAuthenticated()) {
       return { data: null };
     }
-
-    return { data: mockUser };
+    return { data: user };
   }
 
   async signOut(): Promise<{ error?: string }> {
     localStorage.removeItem('custom-auth-token');
+    authService.logout();
     return {};
   }
 }
