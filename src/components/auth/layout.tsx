@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from '@/paths';
 import { DynamicLogo } from '@/components/core/logo';
+
 import { ThemeProvider } from '../core/theme-provider/theme-provider';
 
 export interface LayoutProps {
@@ -17,50 +18,54 @@ export interface LayoutProps {
 export function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <ThemeProvider>
-    <Box
-      sx={{
-        display: { xs: 'flex', lg: 'grid' },
-        flexDirection: 'column',
-        gridTemplateColumns: '1fr 1fr',
-        minHeight: '100%',
-      }}
-    >
-      <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
-        <Box sx={{ p: 3 }}>
-          <Box component={RouterLink} href={paths.dashboard.users} sx={{ display: 'inline-block', fontSize: 0 }}>
-            <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} />
-          </Box>
-        </Box>
-        <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
-          <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
-        </Box>
-      </Box>
       <Box
         sx={{
-          alignItems: 'center',
-          background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
-          color: 'var(--mui-palette-common-white)',
-          display: { xs: 'none', lg: 'flex' },
-          justifyContent: 'center',
-          p: 3,
+          display: { xs: 'flex', lg: 'grid' },
+          flexDirection: 'column',
+          gridTemplateColumns: '1fr 1fr',
+          minHeight: '100%',
         }}
       >
-        <Stack spacing={3}>
-          <Stack spacing={1}>
-            <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
-              Welcome to{' '}
-              <Box component="span" sx={{ color: '#15b79e' }}>
-                Admin Portal
-              </Box>
-            </Typography>
-            <Typography align="center" variant="subtitle1">
-              Secure user management system
-            </Typography>
-          </Stack>
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            {/* TODO: Replace with your custom branding image */}
-            {/* Current implementation uses Devias Kit branding */}
-            {/* 
+        <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
+          <Box sx={{ p: 3 }}>
+            <Box component={RouterLink} href={paths.dashboard.users} sx={{ display: 'inline-block', fontSize: 0 }}>
+              <DynamicLogo colorDark="light" colorLight="dark" height={32} width={122} />
+            </Box>
+          </Box>
+          <Box sx={{ alignItems: 'center', display: 'flex', flex: '1 1 auto', justifyContent: 'center', p: 3 }}>
+            <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            alignItems: 'center',
+            background: 'radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)',
+            color: 'var(--mui-palette-common-white)',
+            display: { xs: 'none', lg: 'flex' },
+            justifyContent: 'center',
+            p: 3,
+          }}
+        >
+          <Stack spacing={3}>
+            <Stack spacing={1}>
+              <Typography
+                color="inherit"
+                sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }}
+                variant="h1"
+              >
+                Welcome to{' '}
+                <Box component="span" sx={{ color: '#15b79e' }}>
+                  Admin Portal
+                </Box>
+              </Typography>
+              <Typography align="center" variant="subtitle1">
+                Secure user management system
+              </Typography>
+            </Stack>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              {/* TODO: Replace with your custom branding image */}
+              {/* Current implementation uses Devias Kit branding */}
+              {/* 
             <Box
               component="img"
               alt="Widgets"
@@ -68,29 +73,29 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
               sx={{ height: 'auto', width: '100%', maxWidth: '600px' }}
             />
             */}
-            {/* Placeholder for your branding image */}
-            <Box
-              sx={{
-                height: '300px',
-                width: '100%',
-                maxWidth: '600px',
-                bgcolor: 'background.paper',
-                borderRadius: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: '1px dashed',
-                borderColor: 'divider',
-              }}
-            >
-              <Typography variant="body2" color="text.secondary">
-                Your branding image here
-              </Typography>
+              {/* Placeholder for your branding image */}
+              <Box
+                sx={{
+                  height: '300px',
+                  width: '100%',
+                  maxWidth: '600px',
+                  bgcolor: 'background.paper',
+                  borderRadius: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '1px dashed',
+                  borderColor: 'divider',
+                }}
+              >
+                <Typography variant="body2" color="text.secondary">
+                  <Box component="img" height={300} src="/assets/shield-logo.png" width={300} />
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Stack>
+          </Stack>
+        </Box>
       </Box>
-    </Box>
     </ThemeProvider>
   );
 }

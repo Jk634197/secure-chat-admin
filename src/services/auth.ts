@@ -43,12 +43,9 @@ class AuthService {
                 body: JSON.stringify({ username: email, passcode: password }),
             });
 
-            if (!response.ok) {
-                return { success: false, error: 'Login failed' };
-            }
-
             const LoginApiResponse = await response.json() as LoginResponse;
-            const { data, success } = LoginApiResponse;
+            const { data, success, message } = LoginApiResponse;
+
             if (success && data?.token && data.role === 'superadmin') {
                 this.token = data.token;
                 setStorageItem('auth-token', data.token);
@@ -57,9 +54,15 @@ class AuthService {
                 return { success: true, user: data };
             }
 
-            return { success: false, error: 'Unauthorized access' };
+            return {
+                success: false,
+                error: message || 'Unauthorized access. Only superadmin users are allowed.'
+            };
         } catch (error) {
-            return { success: false, error: 'Login failed' };
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : 'An error occurred during login. Please try again.'
+            };
         }
     }
 

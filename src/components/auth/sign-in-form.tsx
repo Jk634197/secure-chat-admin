@@ -4,6 +4,7 @@ import * as React from 'react';
 import RouterLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -35,22 +36,23 @@ export function SignInForm(): React.JSX.Element {
   const { checkSession } = useUser();
   const [showPassword, setShowPassword] = React.useState<boolean>();
   const [isPending, setIsPending] = React.useState<boolean>(false);
+  const [error, setLoginError] = React.useState<string | null>(null);
 
   const {
     control,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
 
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
+      setLoginError(null);
 
-      const { error } = await authClient.signInWithPassword(values);
+      const { error: loginError } = await authClient.signInWithPassword(values);
 
-      if (error) {
-        setError('root', { type: 'server', message: error });
+      if (loginError) {
+        setLoginError(loginError);
         setIsPending(false);
         return;
       }
@@ -62,7 +64,7 @@ export function SignInForm(): React.JSX.Element {
       // After refresh, GuestGuard will handle the redirect
       router.refresh();
     },
-    [checkSession, router, setError]
+    [checkSession, router]
   );
 
   return (
@@ -76,6 +78,16 @@ export function SignInForm(): React.JSX.Element {
           </Link>
         </Typography>
       </Stack>
+      {error && (
+        <Alert
+          severity="error"
+          onClose={() => {
+            setLoginError(null);
+          }}
+        >
+          {error}
+        </Alert>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Controller

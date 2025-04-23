@@ -55,7 +55,7 @@ export function MainNav(): React.JSX.Element {
             >
               <ListIcon />
             </IconButton> */}
-
+            <Box component="img" height={50} sx={{ borderRadius: '10px' }} src="/assets/shield-logo.png" width={50} />
             <Typography variant="h5">Welcome back {user?.username?.toLowerCase()}</Typography>
 
             {/* <Tooltip title="Search">

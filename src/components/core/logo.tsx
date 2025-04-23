@@ -36,7 +36,7 @@ export function Logo({ color = 'dark', _emblem, height = HEIGHT, width = WIDTH }
         component="span"
         sx={{ color: color === 'dark' ? 'white' : 'primary.dark', fontWeight: 'bold', fontSize: '1.2rem' }}
       >
-        ADMIN
+        <Box alt="logo" component="img" height={height} src={'/asseets/Shield-Logo.png'} width={width} />;
       </Box>
     </Box>
   );
