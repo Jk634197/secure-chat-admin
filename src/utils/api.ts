@@ -14,8 +14,10 @@ export async function fetchWithAuth<T>(
     // Get token from localStorage or your auth storage
     const token = getStorageItem('auth-token');
 
+    // Only set Content-Type to application/json if not FormData
+    const isFormData = options.body instanceof FormData;
     const headers = {
-        'Content-Type': 'application/json',
+        ...(!isFormData && { 'Content-Type': 'application/json' }),
         Authorization: `Bearer ${token}`,
         ...options.headers,
     };
@@ -36,6 +38,15 @@ export async function fetchWithAuth<T>(
             throw new Error('Session expired. Please login again.');
         }
         throw new Error(`API call failed: ${response.statusText}`);
+    }
+
+    // If the response is empty (like for file uploads), return a success response
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return {
+            data: {} as T,
+            success: true,
+            statusCode: response.status
+        };
     }
 
     return response.json() as Promise<ApiResponse<T>>;
