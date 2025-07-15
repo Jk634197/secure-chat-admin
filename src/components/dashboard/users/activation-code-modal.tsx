@@ -7,7 +7,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -19,33 +23,49 @@ interface ActivationCodeModalProps {
   onSuccess: () => void;
 }
 
+// Duration options (copied from extend-expiration-dialog)
+const durationOptions = [
+  { value: '1 months', label: '1 Month', offset: 'months', hours: 24 * 30 }, // 720
+  { value: '3 months', label: '3 Months', offset: 'months', hours: 24 * 30 * 3 }, // 2160
+  { value: '9 months', label: '9 Months', offset: 'months', hours: 24 * 30 * 9 }, // 6480
+  { value: '1 year', label: '1 Year', offset: 'year', hours: 24 * 365 }, // 8760
+];
+
 export function ActivationCodeModal({ open, onClose, onSuccess }: ActivationCodeModalProps): React.JSX.Element {
   const [activationData, setActivationData] = React.useState<GenerateActivationResponse | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [selectedDuration, setSelectedDuration] = React.useState<string>(durationOptions[0].value);
+  const [hasGenerated, setHasGenerated] = React.useState(false);
 
   React.useEffect(() => {
-    const generateCode = async () => {
-      if (!open) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        const response = await generateActivation();
-        if (response.success && response.statusCode === 200) {
-          setActivationData(response.data);
-        } else {
-          setError(response.message || 'Failed to generate activation code');
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to generate activation code');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void generateCode();
+    if (!open) {
+      setActivationData(null);
+      setError(null);
+      setSelectedDuration(durationOptions[0].value);
+      setHasGenerated(false);
+    }
   }, [open]);
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const selected = durationOptions.find((opt) => opt.value === selectedDuration);
+      const expiresIn = selected ? selected.hours : 0;
+      const response = await generateActivation(selectedDuration, expiresIn);
+      if (response.success && response.statusCode === 200) {
+        setActivationData(response.data);
+        setHasGenerated(true);
+      } else {
+        setError(response.message || 'Failed to generate activation code');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate activation code');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleCopyCode = () => {
     if (activationData?.code) {
@@ -84,7 +104,49 @@ export function ActivationCodeModal({ open, onClose, onSuccess }: ActivationCode
     >
       <DialogTitle>Create Activation Code</DialogTitle>
       <DialogContent>
-        <Stack spacing={3} sx={{ mt: 1 }}>
+        <Stack spacing={2} sx={{ mt: 1 }}>
+          {!hasGenerated && (
+            <>
+              <FormControl fullWidth sx={{ mb: 2 }}>
+                <InputLabel id="duration-select-label">Select Duration</InputLabel>
+                <Select
+                  labelId="duration-select-label"
+                  id="duration-select"
+                  value={selectedDuration}
+                  label="Select Duration"
+                  onChange={(e) => {
+                    setSelectedDuration(e.target.value);
+                  }}
+                >
+                  {durationOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleGenerate}
+                disabled={loading}
+                fullWidth
+                sx={{ borderRadius: 2, fontWeight: 600, mt: 2 }}
+              >
+                {loading ? <CircularProgress size={20} /> : 'Generate'}
+              </Button>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleClose}
+                fullWidth
+                sx={{ borderRadius: 2, fontWeight: 600, mt: 1 }}
+              >
+                Close
+              </Button>
+            </>
+          )}
+
           {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
               <CircularProgress />
@@ -138,8 +200,8 @@ export function ActivationCodeModal({ open, onClose, onSuccess }: ActivationCode
                   src={activationData.qrCode}
                   alt="QR Code"
                   sx={{
-                    width: 200,
-                    height: 200,
+                    width: 260,
+                    height: 260,
                     background: 'white',
                     padding: 2,
                     borderRadius: 1,
@@ -149,12 +211,17 @@ export function ActivationCodeModal({ open, onClose, onSuccess }: ActivationCode
                   Download QR
                 </Button>
               </Stack>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleClose}
+                fullWidth
+                sx={{ borderRadius: 2, fontWeight: 600, mt: 2 }}
+              >
+                Close
+              </Button>
             </>
           )}
-
-          <Button variant="contained" onClick={handleClose} fullWidth sx={{ mt: 2 }}>
-            Close
-          </Button>
         </Stack>
       </DialogContent>
     </Dialog>

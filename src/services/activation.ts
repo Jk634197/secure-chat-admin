@@ -55,9 +55,10 @@ export async function getActivations(): Promise<ApiResponse<ActivationData[]>> {
     return fetchWithAuth<ActivationData[]>('/api/activation/list');
 }
 
-export async function generateActivation(): Promise<ApiResponse<GenerateActivationResponse>> {
+export async function generateActivation(plan?: string, expiresIn?: number): Promise<ApiResponse<GenerateActivationResponse>> {
     return fetchWithAuth<GenerateActivationResponse>('/api/activation/generate', {
-        method: 'POST'
+        method: 'POST',
+        body: JSON.stringify({ ...(plan && { plan }), ...(expiresIn && { expiresIn }) })
     });
 }
 
