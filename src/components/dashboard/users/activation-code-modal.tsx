@@ -27,7 +27,7 @@ interface ActivationCodeModalProps {
 const durationOptions = [
   { value: '1 months', label: '1 Month', offset: 'months', hours: 24 * 30 }, // 720
   { value: '3 months', label: '3 Months', offset: 'months', hours: 24 * 30 * 3 }, // 2160
-  { value: '9 months', label: '9 Months', offset: 'months', hours: 24 * 30 * 9 }, // 6480
+  { value: '6 months', label: '6 Months', offset: 'months', hours: 24 * 30 * 6 }, // 4320
   { value: '1 year', label: '1 Year', offset: 'year', hours: 24 * 365 }, // 8760
 ];
 

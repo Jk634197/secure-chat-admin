@@ -23,7 +23,7 @@ interface ExtendExpirationDialogProps {
 const durationOptions = [
   { value: '1 months', label: '1 Month', offset: 'months' },
   { value: '3 months', label: '3 Months', offset: 'months' },
-  { value: '9 months', label: '9 Months', offset: 'months' },
+  { value: '6 months', label: '6 Months', offset: 'months' },
   { value: '1 year', label: '1 Year', offset: 'year' },
 ];
 
@@ -47,7 +47,8 @@ export function ExtendExpirationDialog({
       const response = await activationService.extendExpiration(
         codeId,
         Number(selectedDuration.split(' ')[0]),
-        selectedDuration.split(' ')[1]
+        selectedDuration.split(' ')[1],
+        selectedDuration // pass as plan
       );
 
       if (response.success) {

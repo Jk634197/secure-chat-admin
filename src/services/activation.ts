@@ -70,10 +70,10 @@ export const activationService = {
         });
     },
 
-    async extendExpiration(activationId: string, offset: number, unit: string): Promise<ApiResponse<ExtendExpirationResponse>> {
+    async extendExpiration(activationId: string, offset: number, unit: string, plan?: string): Promise<ApiResponse<ExtendExpirationResponse>> {
         return fetchWithAuth<ExtendExpirationResponse>(`/api/activation/extend-expiration`, {
             method: 'PUT',
-            body: JSON.stringify({ activationId, offset, unit })
+            body: JSON.stringify({ activationId, offset, unit, ...(plan && { plan }) })
         });
     }
 }; 
